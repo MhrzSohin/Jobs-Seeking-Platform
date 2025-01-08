@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loginvalidation/bloc/jobs_bloc/jobs_events.dart';
 import 'package:loginvalidation/bloc/jobs_bloc/jobs_bloc.dart';
 import 'package:loginvalidation/bloc/jobs_bloc/jobs_state.dart';
+import 'package:loginvalidation/core/color/pallette.dart';
+import 'package:loginvalidation/core/constants/assets_path.dart';
 import 'package:loginvalidation/core/enums/enums.dart';
 
 class Dashboard extends StatefulWidget {
@@ -23,288 +25,380 @@ class _MyHomePageState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: const Color.fromARGB(255, 100, 126, 219),
       appBar: AppBar(
-        title: Text("Jobs Application"),
+        backgroundColor: Pallette.primary,
+        title: Center(
+          child: Text(
+            "Jobs Application",
+            style: TextStyle(
+                fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
       ),
       body: BlocBuilder<JobsBloc, JobsState>(
         builder: (context, state) {
           switch (state.jobsState) {
             case DataFetchingStatus.intial:
-              break;
+              return Center(child: CircularProgressIndicator());
             case DataFetchingStatus.loading:
               return Center(child: CircularProgressIndicator());
-
             case DataFetchingStatus.success:
-              return Container(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      onChanged: (value) {
-                        BlocProvider.of<JobsBloc>(context)
-                            .add(JobsFilteringEvents(value));
-                      },
-                      decoration: InputDecoration(
-                          hintText: "Enter the jobs name ",
-                          border: OutlineInputBorder()),
+              return DecoratedBox(
+                decoration: BoxDecoration(color: Colors.blueGrey
+                    // image: DecorationImage(
+                    //     image: AssetImage(AssetsPath.backGroundImage1),
+                    //     fit: BoxFit.cover),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Expanded(
-                        child: ListView.builder(
-                            itemCount: state.tempjobsRes == null
-                                ? state.jobsRes?.length
-                                : state.tempjobsRes?.length,
-                            itemBuilder: (context, index) {
-                              if (state.tempjobsRes == null) {
-                                final items = state.jobsRes?[index];
-                                return Card(
-                                  elevation: 4,
-                                  child: ExpansionTile(
-                                    childrenPadding:
-                                        EdgeInsets.symmetric(horizontal: 20),
-                                    shape: const Border(),
-                                    title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons
-                                            .supervised_user_circle_rounded),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          "Title : ${items?.title}",
-                                          style: TextStyle(
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.bold),
-                                        )
-                                      ],
-                                    ),
-                                    subtitle: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.message),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          "Description : ${items?.description}",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400),
-                                        )
-                                      ],
-                                    ),
-                                    children: [
-                                      Row(
+                child: Container(
+                  padding: EdgeInsets.all(0),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        child: TextFormField(
+                          onChanged: (value) {
+                            BlocProvider.of<JobsBloc>(context)
+                                .add(JobsFilteringEvents(value));
+                          },
+                          decoration: InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.search,
+                                color: Colors.grey,
+                              ),
+                              filled: true,
+                              fillColor: Pallette.textFormfeilBackground,
+                              hintText: "Search for jobs....",
+                              hintStyle: TextStyle(color: Colors.grey),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8))),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Expanded(
+                          child: ListView.builder(
+                              itemCount: state.tempjobsRes == null
+                                  ? state.jobsRes?.length
+                                  : state.tempjobsRes?.length,
+                              itemBuilder: (context, index) {
+                                if (state.tempjobsRes == null) {
+                                  final items = state.jobsRes?[index];
+                                  return Card(
+                                    elevation: 4,
+                                    child: ExpansionTile(
+                                      childrenPadding: EdgeInsets.all(10),
+                                      shape: const Border(),
+                                      title: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Company : ${items?.company}",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey),
-                                              ),
-                                              Text(
-                                                  "Location : ${items?.location}",
-                                                  style: TextStyle(
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.grey)),
-                                              Text(
-                                                "Contact : ${items?.contact}",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey),
-                                              ),
-                                              Text(
-                                                "Salary From : ${items?.salaryFrom.toString()}",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey),
-                                              ),
-                                              Text(
-                                                "Salary To : ${items?.salaryTo.toString()}",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey),
-                                              ),
-                                              Text(
-                                                "Application Deadline : ${items?.applicationDeadline}",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey),
-                                              ),
-                                              Text(
-                                                "Qualification : ${items?.qualifications}",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey),
-                                              ),
-                                              Text(
-                                                "No. of Openings : ${items?.numberOfOpening.toString()}",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey),
-                                              ),
-                                            ],
+                                          Icon(Icons
+                                              .supervised_user_circle_rounded),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Flexible(
+                                            child: Text(
+                                              "Title : ${items?.title}",
+                                              // softWrap: true,
+                                              // maxLines: 0,
+                                              // overflow: TextOverflow.fade,
+                                              style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold,
+                                                  height: 1.2),
+                                            ),
                                           ),
                                         ],
-                                      )
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                final items = state.tempjobsRes?[index];
-                                return Card(
-                                  elevation: 4,
-                                  child: ExpansionTile(
-                                    childrenPadding:
-                                        EdgeInsets.symmetric(horizontal: 20),
-                                    shape: const Border(),
-                                    title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons
-                                            .supervised_user_circle_rounded),
-                                        const SizedBox(
-                                          width: 10,
+                                      ),
+                                      subtitle: Container(
+                                        margin: EdgeInsets.only(top: 9),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Icon(Icons.message),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Flexible(
+                                              child: Text(
+                                                "Description : ${items?.description}",
+                                                // softWrap: true,
+                                                // maxLines: 3,
+                                                // overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w400,
+                                                    height: 1.5),
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                        Text(
-                                          "Title : ${items?.title}",
-                                          style: TextStyle(
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.bold),
+                                      ),
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Flexible(
+                                              child: Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 30),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "More Details :",
+                                                      style: TextStyle(
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                    Text(
+                                                      "Company : ${items?.company}",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.black),
+                                                    ),
+                                                    Text(
+                                                        "Location : ${items?.location}",
+                                                        style: TextStyle(
+                                                            fontSize: 13,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color:
+                                                                Colors.black)),
+                                                    Text(
+                                                      "Contact : ${items?.contact}",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.black),
+                                                    ),
+                                                    Text(
+                                                      "Salary From : ${items?.salaryFrom.toString()}",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.black),
+                                                    ),
+                                                    Text(
+                                                      "Salary To : ${items?.salaryTo.toString()}",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.black),
+                                                    ),
+                                                    Text(
+                                                      "Application Deadline : ${items?.applicationDeadline}",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.black),
+                                                    ),
+                                                    Text(
+                                                      "Qualification : ${items?.qualifications}",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.black),
+                                                    ),
+                                                    Text(
+                                                      "No. of Openings : ${items?.numberOfOpening.toString()}",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.black),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         )
                                       ],
                                     ),
-                                    subtitle: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.message),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          "Description : ${items?.description}",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400),
-                                        )
-                                      ],
-                                    ),
-                                    children: [
-                                      Row(
+                                  );
+                                } else {
+                                  final items = state.tempjobsRes?[index];
+                                  return Card(
+                                    elevation: 4,
+                                    child: ExpansionTile(
+                                      childrenPadding: EdgeInsets.all(10),
+                                      shape: const Border(),
+                                      title: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Company : ${items?.company}",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey),
-                                              ),
-                                              Text(
-                                                  "Location : ${items?.location}",
-                                                  style: TextStyle(
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.grey)),
-                                              Text(
-                                                "Contact : ${items?.contact}",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey),
-                                              ),
-                                              Text(
-                                                "Salary From : ${items?.salaryFrom.toString()}",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey),
-                                              ),
-                                              Text(
-                                                "Salary To : ${items?.salaryTo.toString()}",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey),
-                                              ),
-                                              Text(
-                                                "Application Deadline : ${items?.applicationDeadline}",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey),
-                                              ),
-                                              Text(
-                                                "Qualification : ${items?.qualifications}",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey),
-                                              ),
-                                              Text(
-                                                "No. of Openings : ${items?.numberOfOpening.toString()}",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey),
-                                              ),
-                                            ],
+                                          Icon(Icons
+                                              .supervised_user_circle_rounded),
+                                          const SizedBox(
+                                            width: 10,
                                           ),
+                                          Flexible(
+                                            child: Text(
+                                              "Title : ${items?.title}",
+                                              // softWrap: true,
+                                              // maxLines: 0,
+                                              // overflow: TextOverflow.fade,
+                                              style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          )
                                         ],
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }
-                            }))
-                  ],
+                                      ),
+                                      subtitle: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Icon(Icons.message),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Flexible(
+                                            child: Text(
+                                              "Description : ${items?.description}",
+                                              // softWrap: true,
+                                              // maxLines: 3,
+                                              // overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Flexible(
+                                              child: Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 30),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "More Details :",
+                                                      style: TextStyle(
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                    Text(
+                                                      "Company : ${items?.company}",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.black),
+                                                    ),
+                                                    Text(
+                                                        "Location : ${items?.location}",
+                                                        style: TextStyle(
+                                                            fontSize: 13,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color:
+                                                                Colors.black)),
+                                                    Text(
+                                                      "Contact : ${items?.contact}",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.black),
+                                                    ),
+                                                    Text(
+                                                      "Salary From : ${items?.salaryFrom.toString()}",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.black),
+                                                    ),
+                                                    Text(
+                                                      "Salary To : ${items?.salaryTo.toString()}",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.black),
+                                                    ),
+                                                    Text(
+                                                      "Application Deadline : ${items?.applicationDeadline}",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.black),
+                                                    ),
+                                                    Text(
+                                                      "Qualification : ${items?.qualifications}",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.black),
+                                                    ),
+                                                    Text(
+                                                      "No. of Openings : ${items?.numberOfOpening.toString()}",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.black),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                }
+                              }))
+                    ],
+                  ),
                 ),
               );
 
             case DataFetchingStatus.failure:
               return Center(child: Text(state.message.toString()));
           }
-          return SizedBox();
         },
       ),
     );

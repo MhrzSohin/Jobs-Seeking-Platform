@@ -43,23 +43,20 @@ class JobsRepository {
       final response = await http.get(Uri.parse('https://jsonfakery.com/jobs'));
       if (response.statusCode == 200) {
         final body = json.decode(response.body) as List;
-         return body.map((e) {
-        return JobsModel(
-          description: e['description'] as String,
-          title: e['title'] as String,
-          location: e['location'] as String,
-          contact: e['contact'] as String,
-          salaryFrom: e['salaryFrom'] as int,
-          salaryTo: e['salaryTo'] as int,
-          company: e['company'] as String,
-          applicationDeadline: e['applicationDeadline'] as String,
-          qualifications: e['qualifications'] as String,
-          numberOfOpening: e['numberOfOpening'] as int,
-  
-          
-
-        );
-      }).toList();
+        return body.map((e) {
+          return JobsModel(
+            description: e['description'] as String,
+            title: e['title'] as String,
+            location: e['location'] as String,
+            contact: e['contact'] as String,
+            salaryFrom: e['salary_from'] as int,
+            salaryTo: e['salary_to'] as int,
+            company: e['company'] as String,
+            applicationDeadline: e['application_deadline'] as String,
+            qualifications: e['qualifications'] as String,
+            numberOfOpening: e['number_of_opening'] as int,
+          );
+        }).toList();
       }
     } on TimeoutException {
       throw Exception("Exception occurs");

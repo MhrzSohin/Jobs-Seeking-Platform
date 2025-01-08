@@ -19,11 +19,12 @@ class MyApp extends StatelessWidget {
       create: (context) => JobsBloc(),
       child: MaterialApp(
         title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Pallette.primary),
           useMaterial3: true,
         ),
-        home: const Dashboard(),
+        home: const WelcomePage(),
       ),
     );
   }

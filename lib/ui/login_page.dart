@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:loginvalidation/core/customs_widgets/rect_btn.dart';
 import 'package:loginvalidation/core/customs_widgets/text_form_component.dart';
 import 'package:loginvalidation/core/customs_widgets/text_heading.dart';
@@ -20,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
         content: Text("Login Successfully"),
         backgroundColor: Colors.green[300],
       ));
-      Navigator.push(
+      Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Dashboard()));
     }
   }
