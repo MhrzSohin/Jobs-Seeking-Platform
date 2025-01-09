@@ -45,7 +45,8 @@ class _MyHomePageState extends State<Dashboard> {
               return Center(child: CircularProgressIndicator());
             case DataFetchingStatus.success:
               return DecoratedBox(
-                decoration: BoxDecoration(color: Colors.blueGrey
+                decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 168, 190, 201)
                     // image: DecorationImage(
                     //     image: AssetImage(AssetsPath.backGroundImage1),
                     //     fit: BoxFit.cover),
